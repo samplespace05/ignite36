@@ -1,57 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import VerifyPage from './pages/VerifyPage';
 
-// The main App component now manages the authentication state.
-function App() {
-    // This state is the single source of truth for whether a user is logged in.
-    // We initialize it by checking localStorage for a token from a previous session.
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('session_token'));
+const LoadingSpinner = () => (
+    <div className="bg-gray-900 min-h-screen flex justify-center items-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-indigo-500"></div>
+    </div>
+);
 
-    // This function is passed to VerifyPage and is called on a successful login.
+function App() {
+    const [authState, setAuthState] = useState('checking');
+    
+    useEffect(() => {
+        console.log(`[APP] Auth state changed to: ${authState}`);
+    }, [authState]);
+
+    useEffect(() => {
+        console.log("[APP] Initial load: Checking for existing session token...");
+        const token = localStorage.getItem('session_token');
+        if (token) {
+            console.log("[APP] Token found in localStorage. Setting state to 'authenticated'.");
+            setAuthState('authenticated');
+        } else {
+            console.log("[APP] No token found. Setting state to 'unauthenticated'.");
+            setAuthState('unauthenticated');
+        }
+    }, []);
+
     const handleLoginSuccess = () => {
-        setIsAuthenticated(true);
+        console.log("[APP] handleLoginSuccess called! Setting auth state to 'authenticated'.");
+        setAuthState('authenticated');
     };
     
-    // This function is passed to DashboardPage for the logout button.
     const handleLogout = () => {
+        console.log("[APP] handleLogout called! Removing token and setting state to 'unauthenticated'.");
         localStorage.removeItem('session_token');
-        setIsAuthenticated(false);
+        setAuthState('unauthenticated');
     };
+
+    if (authState === 'checking') {
+        console.log("[APP] Auth state is 'checking', rendering loading spinner.");
+        return <LoadingSpinner />;
+    }
 
     return (
         <Router>
             <Routes>
-                {/* If the user is authenticated, they can't go to the login page. */}
                 <Route 
                     path="/login" 
-                    element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} 
+                    element={authState === 'authenticated' ? <Navigate to="/dashboard" replace /> : <LoginPage />} 
                 />
-
-                {/* The VerifyPage gets the function to call upon success. */}
                 <Route 
                     path="/verify/:token" 
                     element={<VerifyPage onLoginSuccess={handleLoginSuccess} />} 
                 />
-
-                {/* The new, simpler PrivateRoute logic. It uses the state variable, not localStorage. */}
                 <Route
                     path="/dashboard"
                     element={
-                        isAuthenticated ? (
+                        authState === 'authenticated' ? (
                             <DashboardPage onLogout={handleLogout} />
                         ) : (
                             <Navigate to="/login" replace />
                         )
                     }
                 />
-                
-                {/* A catch-all route that sends users to the correct page based on their auth state. */}
                 <Route 
                   path="*" 
-                  element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} 
+                  element={<Navigate to={authState === 'authenticated' ? "/dashboard" : "/login"} replace />} 
                 />
             </Routes>
         </Router>
