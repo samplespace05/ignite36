@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-export default function VerifyPage() {
+// The component now accepts a prop to notify the parent App component of a successful login.
+export default function VerifyPage({ onLoginSuccess }) {
     const { token } = useParams();
     const navigate = useNavigate();
     const [message, setMessage] = useState('Verifying your login link...');
@@ -23,13 +24,19 @@ export default function VerifyPage() {
                     throw new Error(data.message || 'Verification failed.');
                 }
                 
+                // 1. Still save the token for future page reloads.
                 localStorage.setItem('session_token', data.token);
+                
+                // 2. CRITICAL FIX: Call the function from App.jsx to update the central state.
+                onLoginSuccess();
+                
                 setMessage('Success! Redirecting to your dashboard...');
                 setError(false);
 
+                // 3. Navigate after a short delay to ensure state has updated.
                 setTimeout(() => {
                     navigate('/dashboard', { replace: true });
-                }, 1500);
+                }, 1000);
 
             } catch (err) {
                 setError(true);
@@ -44,7 +51,7 @@ export default function VerifyPage() {
             setMessage('No verification token found. Please return to the login page.');
             setTimeout(() => navigate('/login', { replace: true }), 3000);
         }
-    }, [token, navigate]);
+    }, [token, navigate, onLoginSuccess]);
 
     return (
         <div className="bg-gray-900 min-h-screen flex justify-center items-center p-4">
