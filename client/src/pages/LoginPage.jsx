@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // <-- Make sure to import useEffect
 
-// The Header component remains the same
 const Header = () => (
     <header className="w-full max-w-md flex justify-center items-center space-x-4 mb-8">
         <img src="/innovation-garage-logo.png" alt="Innovation Garage Logo" className="h-12 sm:h-14" />
@@ -15,7 +14,8 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-     useEffect(() => {
+    // --- THIS IS THE NEW HEALTH CHECK CODE ---
+    useEffect(() => {
         const checkServerHealth = async () => {
             const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
             console.log(`Attempting to contact server at: ${apiBaseUrl}`);
@@ -32,12 +32,14 @@ export default function LoginPage() {
         };
         checkServerHealth();
     }, []);
-    
+    // ------------------------------------------
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setMessage('');
         setError('');
+
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
         try {
@@ -64,14 +66,9 @@ export default function LoginPage() {
             className="min-h-screen flex flex-col justify-center items-center p-4 bg-cover bg-center"
             style={{ backgroundImage: "url('/ignite-poster.png')" }}
         >
-            {/* This div creates the dark, semi-transparent overlay */}
             <div className="absolute inset-0 bg-black opacity-60"></div>
-
-            {/* This div holds all content and positions it above the overlay */}
             <div className="relative z-10 w-full flex flex-col justify-center items-center">
-
                 <Header />
-
                 <div className="w-full max-w-md bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-2xl p-8 border border-gray-700">
                     <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-2">Team Leader Login</h1>
                     <p className="text-gray-300 text-center mb-6">Enter your registered email to receive a magic link.</p>
