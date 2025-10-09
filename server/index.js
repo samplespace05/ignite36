@@ -22,6 +22,10 @@ mongoose.connect(process.env.MONGO_URI)
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.get('/api/health', (req, res) => {
+    console.log("Health check endpoint was hit!"); // This will appear in Render logs
+    res.status(200).json({ status: 'UP' });
+});
 
 // Simple root route
 app.get('/', (req, res) => {

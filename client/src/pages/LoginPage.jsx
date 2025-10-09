@@ -15,6 +15,24 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
+     useEffect(() => {
+        const checkServerHealth = async () => {
+            const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            console.log(`Attempting to contact server at: ${apiBaseUrl}`);
+            try {
+                const response = await fetch(`${apiBaseUrl}/api/health`);
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('✅ SUCCESS: Server health check passed!', data);
+            } catch (error) {
+                console.error('❌ FAILED: Could not connect to the backend server. Check the VITE_API_URL and CORS settings.', error);
+            }
+        };
+        checkServerHealth();
+    }, []);
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
