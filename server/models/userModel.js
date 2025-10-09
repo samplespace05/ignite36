@@ -12,14 +12,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  magicToken: {
-    type: String,
-    default: null,
-  },
-  magicTokenExpires: {
-    type: Date,
-    default: null,
-  },
   certificateFiles: {
     type: [String],
     required: true,
