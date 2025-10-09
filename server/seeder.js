@@ -7,9 +7,9 @@ dotenv.config();
 // --- EDIT THIS LIST WITH YOUR ACTUAL TEAM DATA ---
 const usersToInsert = [
   {
-    email: 'team.leader.one@college.edu',
-    teamName: 'Team Phoenix',
-    certificateFiles: ['phoenix_1.pdf', 'phoenix_2.pdf', 'phoenix_3.pdf', 'phoenix_4.pdf', 'phoenix_5.pdf', 'phoenix_6.pdf'],
+    email: 'vedantagr0212@gmail.com', // <-- ADD YOUR EMAIL HERE
+    teamName: 'Test Team Alpha',
+    certificateFiles: ['cert1.pdf', 'cert2.pdf', 'cert3.pdf', 'cert4.pdf', 'cert5.pdf', 'cert6.pdf'],
   },
   {
     email: 'another.leader@college.edu',
