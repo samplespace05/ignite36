@@ -14,14 +14,14 @@ function App() {
     const [authState, setAuthState] = useState('checking');
     
     useEffect(() => {
-        console.log(`[APP] Auth state changed to: ${authState}`);
+        console.log(`%c[APP] Auth state changed to: ${authState}`, 'color: #00A8F7; font-weight: bold;');
     }, [authState]);
 
     useEffect(() => {
         console.log("[APP] Initial load: Checking for existing session token...");
         const token = localStorage.getItem('session_token');
         if (token) {
-            console.log("[APP] Token found in localStorage. Setting state to 'authenticated'.");
+            console.log("[APP] Token found. Setting state to 'authenticated'.");
             setAuthState('authenticated');
         } else {
             console.log("[APP] No token found. Setting state to 'unauthenticated'.");
@@ -41,7 +41,6 @@ function App() {
     };
 
     if (authState === 'checking') {
-        console.log("[APP] Auth state is 'checking', rendering loading spinner.");
         return <LoadingSpinner />;
     }
 
