@@ -8,31 +8,42 @@ const generateToken = (payload, expiresIn) => {
 };
 
 export const handleLoginRequest = async (req, res) => {
+    console.log("--- handleLoginRequest: Function started ---"); // DEBUG LOG
     const { email } = req.body;
     if (!email) {
+        console.log("DEBUG: Email is missing from request.");
         return res.status(400).json({ message: 'Email is required' });
     }
 
     try {
+        console.log(`DEBUG: Searching for user with email: ${email}`);
         const user = await User.findOne({ email });
+
         if (!user) {
+            // We still send a success message to prevent user enumeration
+            console.log("DEBUG: User not found in database. Sending generic success response.");
             return res.status(200).json({ message: 'If an account with this email exists, a login link has been sent.' });
         }
-
+        
+        console.log(`DEBUG: User found: ${user.email}. Generating magic token.`);
         const magicToken = crypto.randomBytes(32).toString('hex');
         const magicTokenExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
 
         user.magicToken = magicToken;
         user.magicTokenExpires = magicTokenExpires;
         await user.save();
+        console.log("DEBUG: Magic token saved to database.");
 
         const magicLink = `${process.env.FRONTEND_URL}/verify/${magicToken}`;
+        console.log(`DEBUG: Generated magic link. Preparing to send email...`);
         
         await sendLoginEmail(user.email, magicLink);
 
+        console.log("--- handleLoginRequest: Function finished successfully. ---");
         res.status(200).json({ message: 'If an account with this email exists, a login link has been sent.' });
+
     } catch (error) {
-        console.error('Error in login request:', error);
+        console.error('--- CRITICAL ERROR in handleLoginRequest ---:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };

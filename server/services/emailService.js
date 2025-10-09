@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
 
 export const sendLoginEmail = async (toEmail, magicLink) => {
+    console.log("--- emailService: Attempting to create transporter... ---"); // DEBUG LOG
+    
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -8,6 +10,7 @@ export const sendLoginEmail = async (toEmail, magicLink) => {
             pass: process.env.EMAIL_PASS,
         },
     });
+    console.log("DEBUG: Transporter created.");
 
     const emailHtml = `
         <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; color: #333;">
@@ -24,15 +27,19 @@ export const sendLoginEmail = async (toEmail, magicLink) => {
     `;
 
     try {
-        await transporter.sendMail({
+        console.log(`DEBUG: Attempting to send mail to ${toEmail}...`);
+        let info = await transporter.sendMail({
             from: `"Ignite 36 Hackathon" <${process.env.EMAIL_USER}>`,
             to: toEmail,
             subject: 'Your Magic Login Link',
             html: emailHtml,
         });
-        console.log(`Login email sent to ${toEmail}`);
+        
+        console.log("✅ SUCCESS: Email sent! Message ID:", info.messageId); // SUCCESS LOG
+        console.log("Full response from mail server:", info.response);
+
     } catch (error) {
-        console.error('Error sending email:', error);
-        throw new Error('Could not send login email.');
+        console.error("❌ FAILED to send email. The error is:", error); // FAILURE LOG
+        throw new Error('Could not send login email due to server-side error.');
     }
 };
