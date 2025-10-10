@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Header = () => (
     <header className="w-full max-w-lg flex justify-around items-center space-x-4 mb-8">
@@ -27,11 +28,14 @@ export default function LoginPage() {
                 body: JSON.stringify({ email }),
             });
             const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.message || 'An error occurred.');
-            }
+            if (!response.ok) throw new Error(data.message || 'An error occurred.');
+            
             if (data.exists) {
-                navigate(`/dashboard/${encodeURIComponent(data.email)}`);
+                if (data.hasSubmittedFeedback) {
+                    navigate(`/dashboard/${encodeURIComponent(data.email)}`);
+                } else {
+                    navigate(`/feedback/${encodeURIComponent(data.email)}`);
+                }
             }
         } catch (err) {
             setError(err.message);
@@ -41,43 +45,27 @@ export default function LoginPage() {
     };
 
     return (
-        <div
-            className="min-h-screen flex flex-col justify-center items-center p-4 bg-cover bg-center"
-            style={{ backgroundImage: "url('/ignite-poster.png')" }}
-        >
+        <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-cover bg-center" style={{ backgroundImage: "url('/ignite-poster.png')" }}>
             <div className="absolute inset-0 bg-black opacity-60"></div>
-            <div className="relative z-10 w-full flex flex-col justify-center items-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 w-full flex flex-col justify-center items-center">
                 <Header />
                 <div className="w-full max-w-md bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-2xl p-8 border border-gray-700">
                     <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-2">Team Leader Portal</h1>
                     <p className="text-gray-300 text-center mb-6">Enter your registered email to get your certificates.</p>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
-                            <label htmlFor="email" className="sr-only">Email</label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="your.email@college.edu"
-                                required
-                                className="w-full px-4 py-3 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            />
+                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your.email@college.edu" required className="w-full px-4 py-3 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                         </div>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 disabled:bg-indigo-400 disabled:cursor-not-allowed"
-                        >
-                            {isLoading ? 'Checking...' : 'Get Certificates'}
-                        </button>
+                        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" disabled={isLoading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 disabled:bg-indigo-400 disabled:cursor-not-allowed">
+                            {isLoading ? 'Checking...' : 'Proceed'}
+                        </motion.button>
                     </form>
                     {error && <div className="mt-4 text-center text-red-300 bg-red-900/50 p-3 rounded-lg">{error}</div>}
                 </div>
-                 <footer className="w-full max-w-5xl text-center text-gray-300 mt-8 text-sm">
+                <footer className="w-full max-w-5xl text-center text-gray-300 mt-8 text-sm">
                     <p>&copy; 2025 Ignite 36 Hackathon. All Rights Reserved.</p>
                 </footer>
-            </div>
+            </motion.div>
         </div>
     );
 }

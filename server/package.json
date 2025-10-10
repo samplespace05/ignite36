@@ -1,8 +1,6 @@
 {
   "name": "hackathon-portal-server",
   "version": "1.0.0",
-  "description": "Backend for the hackathon certificate portal.",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
