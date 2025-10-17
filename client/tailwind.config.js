@@ -5,7 +5,17 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'pixel': ['VT323', 'monospace'],
+      },
+      colors: {
+        'brand-blue': '#E0F2FE',
+        'brand-offwhite': '#F5F5F5',
+        'brand-pink': '#FBCFE8',
+        'brand-text': '#212121',
+      }
+    },
   },
   plugins: [],
 }

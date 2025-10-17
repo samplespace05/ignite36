@@ -3,11 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const Header = () => (
-    <header className="w-full max-w-lg flex justify-around items-center space-x-4 mb-8">
-        <img src="/innovation-garage-logo.png" alt="Innovation Garage Logo" className="h-16 sm:h-20" />
-        <div className="border-l-2 border-gray-500 h-12"></div>
-        <img src="/sih-logo.png" alt="Smart India Hackathon Logo" className="h-16 sm:h-20" />
-    </header>
+    <nav className="w-full p-4 sm:p-6 flex justify-between items-center text-brand-text">
+        <div className="text-lg">T:</div>
+        <div className="hidden sm:flex items-center space-x-6 text-lg">
+            <span>INNOVATE</span>
+            <span>IDEATE</span>
+            <span>INCUBATE</span>
+        </div>
+        <div className="flex items-center space-x-2">
+            <img src="/sih-logo.png" alt="SIH Logo" className="h-10" />
+            <span className="font-bold text-sm leading-tight">CENTER FOR<br/>INNOVATION<br/>INCUBATION</span>
+        </div>
+    </nav>
 );
 
 export default function LoginPage() {
@@ -45,27 +52,30 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-cover bg-center" style={{ backgroundImage: "url('/ignite-poster.png')" }}>
-            <div className="absolute inset-0 bg-black opacity-60"></div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 w-full flex flex-col justify-center items-center">
-                <Header />
-                <div className="w-full max-w-md bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-2xl p-8 border border-gray-700">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-2">Team Leader Portal</h1>
-                    <p className="text-gray-300 text-center mb-6">Enter your registered email to get your certificates.</p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen flex flex-col font-pixel">
+            <Header />
+            <main className="flex-grow flex flex-col justify-center items-center p-4">
+                <img src="/innovation-garage-logo.png" alt="Innovation Garage Logo" className="h-24 sm:h-32 mb-8" />
+                <div className="text-center mb-10">
+                    <h1 className="text-4xl sm:text-5xl bg-brand-offwhite px-4 py-2 rounded-md inline-block shadow-md">INNOVATION GARAGE'S</h1>
+                    <h2 className="text-6xl sm:text-8xl bg-brand-pink px-4 py-1 rounded-full inline-block mt-4 shadow-md">IGNITE 36</h2>
+                </div>
+
+                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="w-full max-w-sm bg-white/70 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-gray-200">
+                    <p className="text-center text-lg mb-4">Enter your registered email to proceed.</p>
                     <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your.email@college.edu" required className="w-full px-4 py-3 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                        </div>
-                        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" disabled={isLoading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 disabled:bg-indigo-400 disabled:cursor-not-allowed">
+                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your.email@college.edu" required className="w-full text-lg px-4 py-2 bg-white border-2 border-brand-text rounded-md focus:outline-none focus:border-pink-400" />
+                        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" disabled={isLoading} className="w-full mt-4 text-xl bg-brand-text text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 disabled:bg-gray-400">
                             {isLoading ? 'Checking...' : 'Proceed'}
                         </motion.button>
                     </form>
-                    {error && <div className="mt-4 text-center text-red-300 bg-red-900/50 p-3 rounded-lg">{error}</div>}
-                </div>
-                <footer className="w-full max-w-5xl text-center text-gray-300 mt-8 text-sm">
-                    <p>&copy; 2025 Ignite 36 Hackathon. All Rights Reserved.</p>
-                </footer>
-            </motion.div>
-        </div>
+                    {error && <div className="mt-4 text-center text-red-600 bg-red-100 p-2 rounded-md">{error}</div>}
+                </motion.div>
+            </main>
+            <footer className="w-full p-4 text-lg flex justify-between items-center">
+                <span>Press / for ?</span>
+                <a href="mailto:hello@toyfight.co" className="bg-yellow-300 px-2 rounded-sm">hello@toyfight.co</a>
+            </footer>
+        </div >
     );
 }

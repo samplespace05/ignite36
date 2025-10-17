@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: 'VT323', monospace;
+  background-color: #E0F2FE; /* Light Blue Background */
+  color: #212121; /* Dark Text */
+}
