@@ -41,30 +41,28 @@ export default function FeedbackPage() {
     const isSubmitDisabled = !formData.valuableAspects || !formData.improvementAreas || !formData.overallExperience;
 
     return (
-        <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-4">
-            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="w-full max-w-2xl">
-                <div className="bg-gray-800 rounded-xl shadow-2xl p-6 sm:p-8">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-2">Event Feedback</h1>
-                    <p className="text-gray-400 text-center mb-8">Please share your thoughts before proceeding.</p>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="valuableAspects" className="block text-sm font-medium text-gray-300 mb-2">🧩 What aspects of the hackathon did you find most valuable?</label>
-                            <textarea id="valuableAspects" name="valuableAspects" rows="3" value={formData.valuableAspects} onChange={handleChange} required className="w-full px-4 py-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                        </div>
-                        <div>
-                            <label htmlFor="improvementAreas" className="block text-sm font-medium text-gray-300 mb-2">⚙️ Were there any challenges or areas for improvement?</label>
-                            <textarea id="improvementAreas" name="improvementAreas" rows="3" value={formData.improvementAreas} onChange={handleChange} required className="w-full px-4 py-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                        </div>
-                        <div>
-                            <label htmlFor="overallExperience" className="block text-sm font-medium text-gray-300 mb-2">📈 How would you rate your overall experience, and would you participate again?</label>
-                            <textarea id="overallExperience" name="overallExperience" rows="3" value={formData.overallExperience} onChange={handleChange} required className="w-full px-4 py-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                        </div>
-                        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading || isSubmitDisabled} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed">
-                            {isLoading ? 'Submitting...' : 'Submit & Go to Downloads'}
-                        </motion.button>
-                    </form>
-                    {error && <div className="mt-4 text-center text-red-400 bg-red-900/50 p-3 rounded-lg">{error}</div>}
-                </div>
+        <div className="min-h-screen flex flex-col justify-center items-center p-4 font-pixel">
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl bg-white/80 backdrop-blur-sm rounded-xl shadow-2xl p-6 sm:p-8 border border-gray-200">
+                <h1 className="text-3xl sm:text-4xl font-bold text-brand-text text-center mb-2">EVENT FEEDBACK</h1>
+                <p className="text-gray-600 text-center text-lg mb-8">Your feedback is valuable. Please share your thoughts.</p>
+                <form onSubmit={handleSubmit} className="space-y-6 text-lg">
+                    <div>
+                        <label htmlFor="valuableAspects" className="block font-medium text-brand-text mb-2">🧩 Most Valuable Aspects?</label>
+                        <textarea id="valuableAspects" name="valuableAspects" rows="3" value={formData.valuableAspects} onChange={handleChange} required className="w-full px-4 py-2 bg-white border-2 border-brand-text rounded-md focus:outline-none focus:border-pink-400" />
+                    </div>
+                    <div>
+                        <label htmlFor="improvementAreas" className="block font-medium text-brand-text mb-2">⚙️ Areas for Improvement?</label>
+                        <textarea id="improvementAreas" name="improvementAreas" rows="3" value={formData.improvementAreas} onChange={handleChange} required className="w-full px-4 py-2 bg-white border-2 border-brand-text rounded-md focus:outline-none focus:border-pink-400" />
+                    </div>
+                    <div>
+                        <label htmlFor="overallExperience" className="block font-medium text-brand-text mb-2">📈 Overall Experience / Would you participate again?</label>
+                        <textarea id="overallExperience" name="overallExperience" rows="3" value={formData.overallExperience} onChange={handleChange} required className="w-full px-4 py-2 bg-white border-2 border-brand-text rounded-md focus:outline-none focus:border-pink-400" />
+                    </div>
+                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading || isSubmitDisabled} className="w-full text-xl bg-brand-text text-white font-bold py-3 px-4 rounded-md transition-colors duration-300 disabled:bg-gray-400">
+                        {isLoading ? 'Submitting...' : 'Submit & Get Certificates'}
+                    </motion.button>
+                </form>
+                {error && <div className="mt-4 text-center text-red-600 bg-red-100 p-2 rounded-md">{error}</div>}
             </motion.div>
         </div>
     );
