@@ -7,7 +7,7 @@ const BackIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" className="h-6 
 
 const Header = ({ onBack }) => (
     <nav className="w-full max-w-5xl p-4 sm:p-6 flex justify-between items-center text-brand-text">
-        <img src="/innovation-garage-logo.png" alt="Innovation Garage Logo" className="h-14 sm:h-16" />
+        <img src="/innovation- garage-logo.png" alt="Innovation Garage Logo" className="h-14 sm:h-16" />
         <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={onBack} className="flex items-center space-x-2 text-lg">
             <BackIcon />
             <span>Back</span>
@@ -30,10 +30,7 @@ export default function DashboardPage() {
             setIsLoading(true);
             try {
                 const response = await fetch(`${apiBaseUrl}/api/certificates?email=${encodeURIComponent(email)}`);
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to fetch data.');
-                }
+                if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.message || 'Failed to fetch data.'); }
                 setData(await response.json());
             } catch (err) {
                 setError(err.message);
@@ -45,7 +42,23 @@ export default function DashboardPage() {
     }, [email, apiBaseUrl]);
 
     const handleDownloadAll = useCallback(async () => {
-        // ... (this function is correct and does not need changes)
+        if (!email) return;
+        try {
+            const response = await fetch(`${apiBaseUrl}/api/certificates/download-all?email=${encodeURIComponent(email)}`);
+            if (!response.ok) throw new Error('Download failed.');
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `${data.teamInfo.name || 'team'}-certificates.zip`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (err) {
+            setError(err.message);
+        }
     }, [email, apiBaseUrl, data.teamInfo.name]);
 
     const handleBack = () => navigate('/login');
@@ -54,15 +67,15 @@ export default function DashboardPage() {
     const itemVariants = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
     return (
-        <div className="min-h-screen flex flex-col items-center font-pixel">
+        <div className="min-h-screen flex flex-col items-center font-pixel bg-brand-blue">
             <Header onBack={handleBack} />
             <AnimatePresence>
                 <motion.main initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-5xl bg-white/80 backdrop-blur-sm rounded-xl shadow-2xl p-6 sm:p-8 border border-gray-200">
                     <div className="border-b-2 border-gray-200 pb-6 mb-8">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-brand-text">Welcome, {data.teamInfo.name || 'Team'}!</h2>
+                        <h2 className="text-3xl sm:text-4xl font-bold text-brand-text tracking-wider">Welcome, {data.teamInfo.name || 'Team'}!</h2>
                         <p className="text-gray-600 text-lg mt-1">{data.teamInfo.email}</p>
                     </div>
-                    {isLoading ? ( <div className="text-center text-gray-500 py-16 text-2xl">Loading Certificates...</div> ) : 
+                    {isLoading ? ( <div className="text-center text-gray-500 py-16 text-2xl">Loading...</div> ) : 
                     error ? ( <div className="text-center text-red-600 bg-red-100 p-4 rounded-lg text-lg">{`Error: ${error}`}</div> ) : 
                     (
                         <>
